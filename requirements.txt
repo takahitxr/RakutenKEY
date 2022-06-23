@@ -3,5 +3,4 @@ sqlalchemy
 streamlit
 oauth2client.service_account
 gspread_dataframe
-gspread
 altair
