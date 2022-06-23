@@ -1,3 +1,8 @@
 streamlit
 pandas
 sqlalchemy
+altair
+oauth2client.service_account
+gspread_dataframe
+gspread
+datetime
