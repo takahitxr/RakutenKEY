@@ -1,8 +1,7 @@
-streamlit
 pandas
 sqlalchemy
-altair
+streamlit
 oauth2client.service_account
 gspread_dataframe
 gspread
-datetime
+altair
