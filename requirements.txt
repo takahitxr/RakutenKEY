@@ -1,7 +1,6 @@
 pandas
 sqlalchemy
 streamlit
-gspread
 gspread_dataframe
 altair
 oauth2client
