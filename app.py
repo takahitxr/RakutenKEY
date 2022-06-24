@@ -1,7 +1,6 @@
-from numpy import empty
 import pandas as pd
 from soupsieve import select
-from sqlalchemy import true
+from sqlalchemy import null, true
 import streamlit as st
 from oauth2client.service_account import ServiceAccountCredentials
 from gspread_dataframe import set_with_dataframe
@@ -10,9 +9,10 @@ import time
 import datetime
 import altair as alt
 
+tstr = "2023-08-20"
+dt = datetime.datetime.strptime(tstr, '%Y-%m-%d')
 
-
-dt = datetime.datetime.today() 
+#dt = datetime.datetime.today() 
 tstr = "2022-06-20"
 tdatetime = datetime.datetime.strptime(tstr, '%Y-%m-%d')
 
@@ -107,8 +107,11 @@ if choice == "キーワード閲覧":
 
 else:
 
-    selectkey = st.text_input("検索したいキーワードを入力してください。")
+    
     keycol1,keycol2 = st.columns(2)
+    selectkey = st.text_input("検索したいキーワードを入力してください。")
+
+
 
     if selectkey:
         df2 = df.T
@@ -118,15 +121,21 @@ else:
             for a in alist:
                 testlist.append(df2[searchday][int(a)-1])
         li_uniq = list(set(testlist))
-
         choice = st.selectbox("キーワードを選択してください。", li_uniq)
-#        choice = st.multiselect("キーワードを選択してください。", li_uniq)
+        choice2 = []
+        
+        with st.expander("比較"):
+            addkey = st.text_input("比較したいキーワードを入力してください")
+            if addkey:
+                testlist = []
+                for searchday in df2:
+                    alist = df2[df2[searchday].str.contains(addkey)].index
+                    for a in alist:
+                        testlist.append(df2[searchday][int(a)-1])
+                li_uniq2 = list(set(testlist))
+                choice2 = st.selectbox("比較するキーワードを選択してください。", li_uniq2)
 
-        addkey  = st.button("比較")
-
-
-
-        if choice: 
+        if choice is not None:
             ranklist = []
             for searchday in df2:
                 if len(df2[df2[searchday] == f"{choice}"].index) > 0:
@@ -135,10 +144,7 @@ else:
                 else:
                     ranklist.append(0)
 
-
-            
-
-
+            st.write(choice)
             if not ranklist:
                 st.error("そのキーワードは存在しません。")
             else:
@@ -155,9 +161,11 @@ else:
                         rakulist.append(df.columns[df.loc[i] == f"{choice}"][0])
                     else:
                         rakulist.append("1001")
+                        
 
                 minrank = min(rakulist)
                 maxrank = max(rakulist)
+
 
                 selection = alt.selection_multi(fields=['symbol'], bind='legend')
                 chart_data = pd.DataFrame(df.loc[date_str_list.strftime('%Y/%m/%d')])        
@@ -165,49 +173,80 @@ else:
                 data2 = pd.DataFrame(date_str_list.strftime('%Y/%m/%d'), columns=["日付"])
                 data3 = pd.concat([data1,data2], axis=1)
                 data3["key"] = str(choice)
+            
+                if choice2:
+                    ranklist2 = []
+                    for searchday in df2:
+                        if len(df2[df2[searchday] == f"{choice2}"].index) > 0:
+                            i = df2[df2[searchday] == f"{choice2}"].index[0]
+                            ranklist2.append(i)
+                        else:
+                            ranklist2.append(0)
 
-                chart = alt.Chart(data3).mark_line().encode(
-                    x="日付:T",
-                    y="ランキング:Q",
-                    color=f"{choice}:N",
-                    opacity=alt.condition(selection, alt.value(1), alt.value(0.1))
-                    ).add_selection(
-                        selection
-                )
+                    if not ranklist2:
+                        st.error("そのキーワードは存在しません。")
+                    else:                      
+                        date_str_list = pd.date_range(selected_date[0], selected_date[1])
+                        ranklist2 = []
+                        for i in date_str_list.strftime('%Y/%m/%d'):
+                            if len(df.columns[df.loc[i] == f"{choice2}"]) > 0:
+                                ranklist2.append(df.columns[df.loc[i] == f"{choice2}"][0])
+                            else:
+                                ranklist2.append("1001")
+                                
 
-                hover = alt.selection_single(
-                    fields=["日付"],
-                    nearest=True,
-                    on="mouseover",
-                    empty="none",
-                )
+                        minrank = min(ranklist2)
+                        maxrank = max(ranklist2)
 
-                chart_temp = (
-                    alt.Chart(data3)
-                    .encode(
-                        x="日付:T",
-                        y="ランキング:Q",
-                        color=f"{choice}:N",
-                        )
-                )
-                tooltips = (
-                    alt.Chart(data3)
-                    .mark_rule()
-                    .encode(
-                        x="日付:T",
-                        y="ランキング:Q",
-                        opacity=alt.condition(hover, alt.value(0.1), alt.value(0)),
-                        tooltip=[
-                            alt.Tooltip("日付:T", title="日付"),
-                            alt.Tooltip("ランキング:Q", title="ランキング"),
-                        ],
-                    )
-                    .add_selection(hover)
-                )
+                        selection = alt.selection_multi(fields=['symbol'], bind='legend')
+                        chart_data = pd.DataFrame(df.loc[date_str_list.strftime('%Y/%m/%d')])        
+                        data1 = pd.DataFrame(ranklist2, columns=["ランキング"])
+                        data2 = pd.DataFrame(date_str_list.strftime('%Y/%m/%d'), columns=["日付"])
+                        data4 = pd.concat([data1,data2], axis=1)
+                        data4["key"] = str(choice2)
+                        data3 = pd.concat([data3,data4])
 
-                points = chart_temp.transform_filter(hover).mark_circle(size=50)
+        chart = alt.Chart(data3).mark_line().encode(
+            x="日付:T",
+            y="ランキング:Q",
+            color="key:N",
+            opacity=alt.condition(selection, alt.value(1), alt.value(0.1))
+            ).add_selection(
+                selection
+        )
+
+        hover = alt.selection_single(
+            fields=["日付"],
+            nearest=True,
+            on="mouseover",
+            empty="none",
+        )
+
+        chart_temp = (
+            alt.Chart(data3)
+            .encode(
+                x="日付:T",
+                y="ランキング:Q",
+                color="key:N",
+                )
+        )
+        tooltips = (
+            alt.Chart(data3)
+            .mark_rule()
+            .encode(
+                x="日付:T",
+                y="ランキング:Q",
+                color="key:N",
+                opacity=alt.condition(hover, alt.value(0.1), alt.value(0)),
+                tooltip=[
+                    alt.Tooltip("日付:T", title="日付"),
+                    alt.Tooltip("ランキング:Q", title="ランキング"),
+                    alt.Tooltip("key:N", title="キーワード")
+                ],
+            )
+            .add_selection(hover)
+        )
+
+        points = chart_temp.transform_filter(hover).mark_circle(size=50)
 #                chart = (alt.Chart(data3).mark_line().encode(x="日付:T", y=alt.Y("ランキング:Q",stack=None, scale=alt.Scale(domain=[minrank, maxrank])), color=f"{choice}:N",shape=f"{choice}:N"))
-                st.altair_chart((chart + points + tooltips), use_container_width=True)
-
-
-                
+        st.altair_chart((chart + points + tooltips), use_container_width=True)
