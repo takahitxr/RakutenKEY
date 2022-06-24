@@ -9,10 +9,10 @@ import time
 import datetime
 import altair as alt
 
-tstr = "2023-08-20"
-dt = datetime.datetime.strptime(tstr, '%Y-%m-%d')
+tstr = "2022-06-20"
+tdatetime = datetime.datetime.strptime(tstr, '%Y-%m-%d')
 
-#dt = datetime.datetime.today() 
+dt = datetime.datetime.today() 
 tstr = "2022-06-20"
 tdatetime = datetime.datetime.strptime(tstr, '%Y-%m-%d')
 
@@ -135,7 +135,7 @@ else:
                 li_uniq2 = list(set(testlist))
                 choice2 = st.selectbox("比較するキーワードを選択してください。", li_uniq2)
 
-        if choice is not None:
+        if choice:
             ranklist = []
             for searchday in df2:
                 if len(df2[df2[searchday] == f"{choice}"].index) > 0:
@@ -144,7 +144,7 @@ else:
                 else:
                     ranklist.append(0)
 
-            st.write(choice)
+
             if not ranklist:
                 st.error("そのキーワードは存在しません。")
             else:
