@@ -8,6 +8,7 @@ import gspread
 import time
 import datetime
 import altair as alt
+import unicodedata
 
 tstr = "2022-06-20"
 tdatetime = datetime.datetime.strptime(tstr, '%Y-%m-%d')
@@ -41,6 +42,14 @@ def get_data():
 
     return df
 
+def get_east_asian_width_count(text):
+    count = 0
+    for c in text:
+        if unicodedata.east_asian_width(c) in 'FWA':
+            count += 2
+        else:
+            count += 1
+    return count
 
 clicked = st.button("キャッシュクリア")
 if clicked:
@@ -60,23 +69,61 @@ if choice == "キーワード閲覧":
 
 
     for idx in range(len(df.columns) // 5):
-        url1 = dftoday[idx * 5 + 0].replace(" ", "+")
-        url2 = dftoday[idx * 5 + 1].replace(" ", "+")
-        url3 = dftoday[idx * 5 + 2].replace(" ", "+")
-        url4 = dftoday[idx * 5 + 3].replace(" ", "+")
-        url5 = dftoday[idx * 5 + 4].replace(" ", "+")
+        urls = []
+        links = []
+        texts = []
 
-        link1 = f"[{dftoday[idx * 5 + 0]}]({'https://search.rakuten.co.jp/search/mall/' + url1})"
-        link2 = f"[{dftoday[idx * 5 + 1]}]({'https://search.rakuten.co.jp/search/mall/' + url2})"
-        link3 = f"[{dftoday[idx * 5 + 2]}]({'https://search.rakuten.co.jp/search/mall/' + url3})"
-        link4 = f"[{dftoday[idx * 5 + 3]}]({'https://search.rakuten.co.jp/search/mall/' + url4})"
-        link5 = f"[{dftoday[idx * 5 + 4]}]({'https://search.rakuten.co.jp/search/mall/' + url5})"
+        for i in range(5):
+            urls.append(dftoday[idx * 5 + i].replace(" ", "+"))
+            links.append(f"[{dftoday[idx * 5 + i]}]({'https://search.rakuten.co.jp/search/mall/' + urls[i]})")
+            texts.append(f"{idx * 5 + i + 1}位 {links[i]}")
+            
+            if idx < 20:
+                if get_east_asian_width_count(dftoday[idx * 5 + i]) <= 12:
+                    texts[i] = texts[i] + "<br><br><br>"
+                elif get_east_asian_width_count(dftoday[idx * 5 + i]) <= 28 and get_east_asian_width_count(dftoday[idx * 5 + i]) > 12:
+                    texts[i] = texts[i] + "<br><br>"
+            else:
+                if get_east_asian_width_count(dftoday[idx * 5 + i]) <= 11:
+                    texts[i] = texts[i] + "<br><br><br>"
+                elif get_east_asian_width_count(dftoday[idx * 5 + i]) <= 27 and get_east_asian_width_count(dftoday[idx * 5 + i]) > 11:
+                    texts[i] = texts[i] + "<br><br>"
+
+
+            # if i == 4:
+            #     for j in range(5):
+            #         if len(dftoday[idx * 5 + j]) < 6:
+            #             texts[j] = texts[j] + "<br><br>"
+
         
-        text1 = f"{idx * 5 + 1}位 {link1}"
-        text2 = f"{idx * 5 + 2}位 {link2}"
-        text3 = f"{idx * 5 + 3}位 {link3}"
-        text4 = f"{idx * 5 + 4}位 {link4}"
-        text5 = f"{idx * 5 + 5}位 {link5}"
+        col1.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[0]}</span>', unsafe_allow_html=True)
+        col2.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[1]}</span>', unsafe_allow_html=True)
+        col3.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[2]}</span>', unsafe_allow_html=True)
+        col4.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[3]}</span>', unsafe_allow_html=True)
+        col5.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[4]}</span>', unsafe_allow_html=True)
+
+
+
+        # url1 = dftoday[idx * 5 + 0].replace(" ", "+")
+        # url2 = dftoday[idx * 5 + 1].replace(" ", "+")
+        # url3 = dftoday[idx * 5 + 2].replace(" ", "+")
+        # url4 = dftoday[idx * 5 + 3].replace(" ", "+")
+        # url5 = dftoday[idx * 5 + 4].replace(" ", "+")
+
+        # links = [5]
+
+        # links[0] = f"[{dftoday[idx * 5 + 0]}]({'https://search.rakuten.co.jp/search/mall/' + url1})"
+        # links[1] = f"[{dftoday[idx * 5 + 1]}]({'https://search.rakuten.co.jp/search/mall/' + url2})"
+        # links[2] = f"[{dftoday[idx * 5 + 2]}]({'https://search.rakuten.co.jp/search/mall/' + url3})"
+        # links[3] = f"[{dftoday[idx * 5 + 3]}]({'https://search.rakuten.co.jp/search/mall/' + url4})"
+        # links[4] = f"[{dftoday[idx * 5 + 4]}]({'https://search.rakuten.co.jp/search/mall/' + url5})"
+
+
+        # text1 = f"{idx * 5 + 1}位 {links[0]}"
+        # text2 = f"{idx * 5 + 2}位 {links[1]}"
+        # text3 = f"{idx * 5 + 3}位 {links[2]}"
+        # text4 = f"{idx * 5 + 4}位 {links[3]}"
+        # text5 = f"{idx * 5 + 5}位 {links[4]}"
         
         # with st.container():
         #     col1,col2,col3,col4,col5 = st.columns(5)
@@ -90,14 +137,10 @@ if choice == "キーワード閲覧":
         #         st.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{text4}</span>', unsafe_allow_html=True)
         #     with col5:
         #         st.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{text5}</span>', unsafe_allow_html=True)
-            
 
 
-        col1.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{text1}</span>', unsafe_allow_html=True)
-        col2.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{text2}</span>', unsafe_allow_html=True)
-        col3.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{text3}</span>', unsafe_allow_html=True)
-        col4.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{text4}</span>', unsafe_allow_html=True)
-        col5.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{text5}</span>', unsafe_allow_html=True)
+
+
             # if idx % 20 == 0:
             #     col1.write("------------------------------------------------------")
             #     col2.write("------------------------------------------------------")
