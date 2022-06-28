@@ -96,12 +96,23 @@ if choice == "キーワード閲覧":
             #             texts[j] = texts[j] + "<br><br>"
 
         
-        col1.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[0]}</span>', unsafe_allow_html=True)
-        col2.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[1]}</span>', unsafe_allow_html=True)
-        col3.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[2]}</span>', unsafe_allow_html=True)
-        col4.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[3]}</span>', unsafe_allow_html=True)
-        col5.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[4]}</span>', unsafe_allow_html=True)
-
+        # col1.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[0]}</span>', unsafe_allow_html=True)
+        # col2.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[1]}</span>', unsafe_allow_html=True)
+        # col3.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[2]}</span>', unsafe_allow_html=True)
+        # col4.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[3]}</span>', unsafe_allow_html=True)
+        # col5.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[4]}</span>', unsafe_allow_html=True)
+        with st.container():
+            col1,col2,col3,col4,col5 = st.columns(5)
+            with col1:
+                st.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[0]}</span>', unsafe_allow_html=True)
+            with col2:
+                st.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[1]}</span>', unsafe_allow_html=True)
+            with col3:
+                st.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[2]}</span>', unsafe_allow_html=True)
+            with col4:
+                st.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[3]}</span>', unsafe_allow_html=True)
+            with col5:
+                st.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[4]}</span>', unsafe_allow_html=True)
 
 
         # url1 = dftoday[idx * 5 + 0].replace(" ", "+")
@@ -125,18 +136,7 @@ if choice == "キーワード閲覧":
         # text4 = f"{idx * 5 + 4}位 {links[3]}"
         # text5 = f"{idx * 5 + 5}位 {links[4]}"
         
-        # with st.container():
-        #     col1,col2,col3,col4,col5 = st.columns(5)
-        #     with col1:
-        #         st.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{text1}</span>', unsafe_allow_html=True)
-        #     with col2:
-        #         st.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{text2}</span>', unsafe_allow_html=True)
-        #     with col3:
-        #         st.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{text3}</span>', unsafe_allow_html=True)
-        #     with col4:
-        #         st.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{text4}</span>', unsafe_allow_html=True)
-        #     with col5:
-        #         st.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{text5}</span>', unsafe_allow_html=True)
+
 
 
 
