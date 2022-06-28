@@ -22,7 +22,7 @@ st.title("楽天キーワード解析アプリ")
 choice = st.sidebar.radio("""
 メニューを選択してください。
 """
-,["キーワード閲覧", "キーワード検索"]
+,["キーワード検索", "キーワード閲覧"]
 )
 
 
@@ -77,30 +77,7 @@ if choice == "キーワード閲覧":
             urls.append(dftoday[idx * 5 + i].replace(" ", "+"))
             links.append(f"[{dftoday[idx * 5 + i]}]({'https://search.rakuten.co.jp/search/mall/' + urls[i]})")
             texts.append(f"{idx * 5 + i + 1}位 {links[i]}")
-            
-            if idx < 20:
-                if get_east_asian_width_count(dftoday[idx * 5 + i]) <= 12:
-                    texts[i] = texts[i] + "<br><br><br>"
-                elif get_east_asian_width_count(dftoday[idx * 5 + i]) <= 28 and get_east_asian_width_count(dftoday[idx * 5 + i]) > 12:
-                    texts[i] = texts[i] + "<br><br>"
-            else:
-                if get_east_asian_width_count(dftoday[idx * 5 + i]) <= 11:
-                    texts[i] = texts[i] + "<br><br><br>"
-                elif get_east_asian_width_count(dftoday[idx * 5 + i]) <= 27 and get_east_asian_width_count(dftoday[idx * 5 + i]) > 11:
-                    texts[i] = texts[i] + "<br><br>"
 
-
-            # if i == 4:
-            #     for j in range(5):
-            #         if len(dftoday[idx * 5 + j]) < 6:
-            #             texts[j] = texts[j] + "<br><br>"
-
-        
-        # col1.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[0]}</span>', unsafe_allow_html=True)
-        # col2.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[1]}</span>', unsafe_allow_html=True)
-        # col3.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[2]}</span>', unsafe_allow_html=True)
-        # col4.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[3]}</span>', unsafe_allow_html=True)
-        # col5.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[4]}</span>', unsafe_allow_html=True)
         with st.container():
             col1,col2,col3,col4,col5 = st.columns(5)
             with col1:
@@ -115,46 +92,11 @@ if choice == "キーワード閲覧":
                 st.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[4]}</span>', unsafe_allow_html=True)
 
 
-        # url1 = dftoday[idx * 5 + 0].replace(" ", "+")
-        # url2 = dftoday[idx * 5 + 1].replace(" ", "+")
-        # url3 = dftoday[idx * 5 + 2].replace(" ", "+")
-        # url4 = dftoday[idx * 5 + 3].replace(" ", "+")
-        # url5 = dftoday[idx * 5 + 4].replace(" ", "+")
-
-        # links = [5]
-
-        # links[0] = f"[{dftoday[idx * 5 + 0]}]({'https://search.rakuten.co.jp/search/mall/' + url1})"
-        # links[1] = f"[{dftoday[idx * 5 + 1]}]({'https://search.rakuten.co.jp/search/mall/' + url2})"
-        # links[2] = f"[{dftoday[idx * 5 + 2]}]({'https://search.rakuten.co.jp/search/mall/' + url3})"
-        # links[3] = f"[{dftoday[idx * 5 + 3]}]({'https://search.rakuten.co.jp/search/mall/' + url4})"
-        # links[4] = f"[{dftoday[idx * 5 + 4]}]({'https://search.rakuten.co.jp/search/mall/' + url5})"
-
-
-        # text1 = f"{idx * 5 + 1}位 {links[0]}"
-        # text2 = f"{idx * 5 + 2}位 {links[1]}"
-        # text3 = f"{idx * 5 + 3}位 {links[2]}"
-        # text4 = f"{idx * 5 + 4}位 {links[3]}"
-        # text5 = f"{idx * 5 + 5}位 {links[4]}"
-        
-
-
-
-
-
-            # if idx % 20 == 0:
-            #     col1.write("------------------------------------------------------")
-            #     col2.write("------------------------------------------------------")
-            #     col3.write("------------------------------------------------------")
-            #     col4.write("------------------------------------------------------")
-            #     col5.write("------------------------------------------------------")      
-
 else:
 
     
     keycol1,keycol2 = st.columns(2)
     selectkey = st.text_input("検索したいキーワードを入力してください。")
-
-
 
     if selectkey:
         df2 = df.T
@@ -168,7 +110,7 @@ else:
         choice2 = []
         
         with st.expander("比較"):
-            addkey = st.text_input("比較したいキーワードを入力してください")
+            addkey = st.text_input("比較1したいキーワードを入力してください")
             if addkey:
                 testlist = []
                 for searchday in df2:
@@ -176,7 +118,44 @@ else:
                     for a in alist:
                         testlist.append(df2[searchday][int(a)-1])
                 li_uniq2 = list(set(testlist))
-                choice2 = st.selectbox("比較するキーワードを選択してください。", li_uniq2)
+                choice2 = st.selectbox("比較1するキーワードを選択してください。", li_uniq2)
+
+                choice3 = []
+
+                addkey2 = st.text_input("比較2したいキーワードを入力してください")
+                if addkey2:
+                    testlist = []
+                    for searchday in df2:
+                        alist = df2[df2[searchday].str.contains(addkey2)].index
+                        for a in alist:
+                            testlist.append(df2[searchday][int(a)-1])
+                    li_uniq3 = list(set(testlist))
+                    choice3 = st.selectbox("比較2するキーワードを選択してください。", li_uniq3)
+
+                    choice4 = []
+
+                    addkey3 = st.text_input("比較3したいキーワードを入力してください")
+                    if addkey3:
+                        testlist = []
+                        for searchday in df2:
+                            alist = df2[df2[searchday].str.contains(addkey3)].index
+                            for a in alist:
+                                testlist.append(df2[searchday][int(a)-1])
+                        li_uniq4 = list(set(testlist))
+                        choice4 = st.selectbox("比較3するキーワードを選択してください。", li_uniq4)
+
+                        choice5 = []
+
+                        addkey4 = st.text_input("比較4したいキーワードを入力してください")
+                        if addkey4:
+                            testlist = []
+                            for searchday in df2:
+                                alist = df2[df2[searchday].str.contains(addkey4)].index
+                                for a in alist:
+                                    testlist.append(df2[searchday][int(a)-1])
+                            li_uniq5 = list(set(testlist))
+                            choice5 = st.selectbox("比較4するキーワードを選択してください。", li_uniq5)
+
 
         if choice:
             ranklist = []
@@ -217,6 +196,8 @@ else:
                 data3 = pd.concat([data1,data2], axis=1)
                 data3["key"] = str(choice)
             
+
+
                 if choice2:
                     ranklist2 = []
                     for searchday in df2:
@@ -248,6 +229,107 @@ else:
                         data4 = pd.concat([data1,data2], axis=1)
                         data4["key"] = str(choice2)
                         data3 = pd.concat([data3,data4])
+
+
+                        if choice3:
+                            ranklist2 = []
+                            for searchday in df2:
+                                if len(df2[df2[searchday] == f"{choice3}"].index) > 0:
+                                    i = df2[df2[searchday] == f"{choice3}"].index[0]
+                                    ranklist2.append(i)
+                                else:
+                                    ranklist2.append(0)
+
+                            if not ranklist2:
+                                st.error("そのキーワードは存在しません。")
+                            else:                      
+                                date_str_list = pd.date_range(selected_date[0], selected_date[1])
+                                ranklist2 = []
+                                for i in date_str_list.strftime('%Y/%m/%d'):
+                                    if len(df.columns[df.loc[i] == f"{choice3}"]) > 0:
+                                        ranklist2.append(df.columns[df.loc[i] == f"{choice3}"][0])
+                                    else:
+                                        ranklist2.append("1001")
+                                        
+
+                                minrank = min(ranklist2)
+                                maxrank = max(ranklist2)
+
+                                selection = alt.selection_multi(fields=['symbol'], bind='legend')
+                                chart_data = pd.DataFrame(df.loc[date_str_list.strftime('%Y/%m/%d')])        
+                                data1 = pd.DataFrame(ranklist2, columns=["ランキング"])
+                                data2 = pd.DataFrame(date_str_list.strftime('%Y/%m/%d'), columns=["日付"])
+                                data4 = pd.concat([data1,data2], axis=1)
+                                data4["key"] = str(choice3)
+                                data3 = pd.concat([data3,data4])
+
+                                
+                                if choice4:
+                                    ranklist2 = []
+                                    for searchday in df2:
+                                        if len(df2[df2[searchday] == f"{choice4}"].index) > 0:
+                                            i = df2[df2[searchday] == f"{choice4}"].index[0]
+                                            ranklist2.append(i)
+                                        else:
+                                            ranklist2.append(0)
+
+                                    if not ranklist2:
+                                        st.error("そのキーワードは存在しません。")
+                                    else:                      
+                                        date_str_list = pd.date_range(selected_date[0], selected_date[1])
+                                        ranklist2 = []
+                                        for i in date_str_list.strftime('%Y/%m/%d'):
+                                            if len(df.columns[df.loc[i] == f"{choice4}"]) > 0:
+                                                ranklist2.append(df.columns[df.loc[i] == f"{choice4}"][0])
+                                            else:
+                                                ranklist2.append("1001")
+                                                
+
+                                        minrank = min(ranklist2)
+                                        maxrank = max(ranklist2)
+
+                                        selection = alt.selection_multi(fields=['symbol'], bind='legend')
+                                        chart_data = pd.DataFrame(df.loc[date_str_list.strftime('%Y/%m/%d')])        
+                                        data1 = pd.DataFrame(ranklist2, columns=["ランキング"])
+                                        data2 = pd.DataFrame(date_str_list.strftime('%Y/%m/%d'), columns=["日付"])
+                                        data4 = pd.concat([data1,data2], axis=1)
+                                        data4["key"] = str(choice4)
+                                        data3 = pd.concat([data3,data4])
+
+                                        if choice5:
+                                            ranklist2 = []
+                                            for searchday in df2:
+                                                if len(df2[df2[searchday] == f"{choice5}"].index) > 0:
+                                                    i = df2[df2[searchday] == f"{choice5}"].index[0]
+                                                    ranklist2.append(i)
+                                                else:
+                                                    ranklist2.append(0)
+
+                                            if not ranklist2:
+                                                st.error("そのキーワードは存在しません。")
+                                            else:                      
+                                                date_str_list = pd.date_range(selected_date[0], selected_date[1])
+                                                ranklist2 = []
+                                                for i in date_str_list.strftime('%Y/%m/%d'):
+                                                    if len(df.columns[df.loc[i] == f"{choice5}"]) > 0:
+                                                        ranklist2.append(df.columns[df.loc[i] == f"{choice5}"][0])
+                                                    else:
+                                                        ranklist2.append("1001")
+                                                        
+
+                                                minrank = min(ranklist2)
+                                                maxrank = max(ranklist2)
+
+                                                selection = alt.selection_multi(fields=['symbol'], bind='legend')
+                                                chart_data = pd.DataFrame(df.loc[date_str_list.strftime('%Y/%m/%d')])        
+                                                data1 = pd.DataFrame(ranklist2, columns=["ランキング"])
+                                                data2 = pd.DataFrame(date_str_list.strftime('%Y/%m/%d'), columns=["日付"])
+                                                data4 = pd.concat([data1,data2], axis=1)
+                                                data4["key"] = str(choice5)
+                                                data3 = pd.concat([data3,data4])
+
+
+
 
         chart = alt.Chart(data3).mark_line().encode(
             x="日付:T",
