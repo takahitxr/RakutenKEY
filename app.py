@@ -7,22 +7,19 @@ from gspread_dataframe import set_with_dataframe
 import gspread
 import time
 import datetime
+from datetime import timedelta
 import altair as alt
 import unicodedata
 
 tstr = "2022-06-20"
 tdatetime = datetime.datetime.strptime(tstr, '%Y-%m-%d')
-
 dt = datetime.datetime.today() 
-tstr = "2022-06-20"
-tdatetime = datetime.datetime.strptime(tstr, '%Y-%m-%d')
-
 
 st.title("楽天キーワード解析アプリ")
 choice = st.sidebar.radio("""
 メニューを選択してください。
 """
-,["キーワード検索", "キーワード閲覧"]
+,["キーワード検索", "キーワード閲覧", "急上昇ワード"]
 )
 
 
@@ -41,19 +38,6 @@ def get_data():
     df = df.set_index("Date")
 
     return df
-
-def get_east_asian_width_count(text):
-    count = 0
-    for c in text:
-        if unicodedata.east_asian_width(c) in 'FWA':
-            count += 2
-        else:
-            count += 1
-    return count
-
-clicked = st.button("キャッシュクリア")
-if clicked:
-    st.legacy_caching.clear_cache()
 
 
 df= get_data()
@@ -92,12 +76,12 @@ if choice == "キーワード閲覧":
                 st.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[4]}</span>', unsafe_allow_html=True)
 
 
-else:
+elif choice == "キーワード検索":
 
     
     keycol1,keycol2 = st.columns(2)
     selectkey = st.text_input("検索したいキーワードを入力してください。")
-
+    
     if selectkey:
         df2 = df.T
         testlist = []
@@ -375,3 +359,24 @@ else:
         points = chart_temp.transform_filter(hover).mark_circle(size=50)
 #                chart = (alt.Chart(data3).mark_line().encode(x="日付:T", y=alt.Y("ランキング:Q",stack=None, scale=alt.Scale(domain=[minrank, maxrank])), color=f"{choice}:N",shape=f"{choice}:N"))
         st.altair_chart((chart + points + tooltips), use_container_width=True)
+
+else:
+
+    df= get_data()
+    df2 = df.T
+    selectday = st.date_input("日付を選択してください", max_value=dt, min_value=tdatetime)
+    st.write("前日と比較してランキングが200位以上上がったキーワードを抽出します。")
+    selectday = str(selectday).replace("-", "/")
+    ysday = datetime.datetime.strptime(selectday.replace("/", ""), '%Y%m%d') - timedelta(1)
+    ysday = ysday.strftime('%Y/%m/%d')  
+
+    for a, item in enumerate(df2[selectday]):
+        num = df2[ysday].loc[df2[ysday] == item].index
+        if len(num) > 0:
+            ysnum = int(num[0])
+            if ysnum - int(a) + 1 > 200:
+                itemplus = item.replace(" ", "+")
+                itemlink = f"[{item}]({'https://search.rakuten.co.jp/search/mall/' + itemplus})"
+                st.write(f'<span style="font-size: 1.2em;letter-spacing:2px">{itemlink}のランキングが{ysnum}位から{int(a) + 1}位に上昇しました。</span>', unsafe_allow_html=True)
+
+                
