@@ -15,6 +15,10 @@ tstr = "2022-06-20"
 tdatetime = datetime.datetime.strptime(tstr, '%Y-%m-%d')
 dt = datetime.datetime.today() 
 
+clicked = st.button("キャッシュクリア")
+if clicked:
+    st.legacy_caching.clear_cache()
+
 st.title("楽天キーワード解析アプリ")
 choice = st.sidebar.radio("""
 メニューを選択してください。
