@@ -431,8 +431,6 @@ elif choice == "価格ドットコム急上昇":
     col1,col2,col3,col4,col5 = st.columns(5)
     dftoday = df4.loc[[selectday]].values[0]
 
-
-
     for idx in range(len(df4.columns) // 5):
         urls = []
         links = []
