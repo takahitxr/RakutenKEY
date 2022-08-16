@@ -31,10 +31,8 @@ def keycheck():
     options.add_argument('--incognito')
 
     browser = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=options)
-
     browser.get(url)
     browser.implicitly_wait(20)
-
     toprank = browser.find_elements_by_class_name("kWdWrd")
     nextrank = browser.find_elements_by_class_name("kWdRestWrd")
     toprank.extend(nextrank)
