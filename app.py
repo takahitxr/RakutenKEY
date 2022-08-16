@@ -51,9 +51,6 @@ def get_data():
     df4 = df4.set_index("Date")
     return df, df3, df4
 
-
-
-
 df, df3, df4 = get_data()
 
 
