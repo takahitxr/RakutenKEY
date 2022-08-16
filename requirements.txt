@@ -1,0 +1,6 @@
+pandas
+sqlalchemy
+streamlit
+gspread_dataframe
+altair
+oauth2client
