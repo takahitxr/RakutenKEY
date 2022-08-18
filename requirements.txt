@@ -5,4 +5,4 @@ gspread_dataframe
 altair
 oauth2client
 soupsieve
-BeautifulSoup
+bs4
