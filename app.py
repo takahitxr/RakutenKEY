@@ -23,7 +23,7 @@ st.title("キーワード解析アプリ")
 choice = st.sidebar.radio("""
 メニューを選択してください。
 """
-,["キーワード検索", "キーワード閲覧", "急上昇ワード", "価格ドットコムキーワード", "価格ドットコム急上昇"]
+,["楽天キーワード検索", "楽天キーワード閲覧", "楽天急上昇ワード", "価格ドットコムキーワード", "価格ドットコム急上昇"]
 )
 
 
@@ -54,7 +54,7 @@ def get_data():
 df, df3, df4 = get_data()
 
 
-if choice == "キーワード閲覧":
+if choice == "楽天キーワード閲覧":
     selectday = st.date_input("日付を選択してください", max_value=dt, min_value=tdatetime)
     selectday = str(selectday).replace("-", "/")
 
@@ -87,7 +87,7 @@ if choice == "キーワード閲覧":
                 st.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[4]}</span>', unsafe_allow_html=True)
 
 
-elif choice == "キーワード検索":
+elif choice == "楽天キーワード検索":
 
     
     keycol1,keycol2 = st.columns(2)
@@ -371,7 +371,7 @@ elif choice == "キーワード検索":
 #                chart = (alt.Chart(data3).mark_line().encode(x="日付:T", y=alt.Y("ランキング:Q",stack=None, scale=alt.Scale(domain=[minrank, maxrank])), color=f"{choice}:N",shape=f"{choice}:N"))
         st.altair_chart((chart + points + tooltips), use_container_width=True)
 
-elif choice == "急上昇ワード":
+elif choice == "楽天急上昇ワード":
 
     df, df3, df4 = get_data()
     df2 = df.T
