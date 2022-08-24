@@ -25,10 +25,9 @@ st.title("キーワード解析アプリ")
 choice = st.sidebar.radio("""
 メニューを選択してください。
 """
-,["楽天キーワード検索", "楽天キーワード閲覧", "楽天急上昇ワード", "価格ドットコムキーワード", "価格ドットコム急上昇"]
+,["楽天キーワード検索", "楽天キーワード閲覧", "楽天急上昇ワード", "価格ドットコムキーワード", "価格ドットコム急上昇","お問い合わせ"]
 )
 
-st.sidebar.write(f'<span style="font-size: 1.0em;letter-spacing:2px">[お問い合わせ](https://docs.google.com/forms/d/e/1FAIpQLSdgRvJNzOgBHSdem3CbElkrDAbDAe4--NEnxJyIasXGbBHwsg/viewform)</span>', unsafe_allow_html=True)
 
 
 @st.cache
@@ -457,3 +456,8 @@ elif choice == "価格ドットコム急上昇":
                 st.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[3]}</span>', unsafe_allow_html=True)
             with col5:
                 st.write(f'<span style="font-size: 0.8em;letter-spacing:2px">{texts[4]}</span>', unsafe_allow_html=True)
+
+elif choice == "お問い合わせ":
+    st.write("ツールの不具合等があった際は、下記のURLにアクセスしていただきご記入ください。")
+
+    st.write(f'<span style="font-size: 1.4em;letter-spacing:2px">[お問い合わせ](https://docs.google.com/forms/d/e/1FAIpQLSdgRvJNzOgBHSdem3CbElkrDAbDAe4--NEnxJyIasXGbBHwsg/viewform)</span>', unsafe_allow_html=True)
