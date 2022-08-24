@@ -1,6 +1,6 @@
 pandas
 sqlalchemy
-streamlit=1.10.0
+streamlit==1.10.0
 gspread_dataframe
 altair
 oauth2client
