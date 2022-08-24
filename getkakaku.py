@@ -19,7 +19,6 @@ SPREADSHEET_KEY = '1DNx5LcmrJyoxLKJM6qhasfM4CxlWOG9Yn1xmMUe2aDo'
 sheet = gc.open_by_key(SPREADSHEET_KEY).worksheet('シート3')
 sheet4 = gc.open_by_key(SPREADSHEET_KEY).worksheet('シート4')
 
-
 def keycheck():
 
     url = "https://kakaku.com/keyword/"
