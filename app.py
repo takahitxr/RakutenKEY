@@ -15,6 +15,8 @@ tstr = "2022-06-20"
 tdatetime = datetime.datetime.strptime(tstr, '%Y-%m-%d')
 dt = datetime.datetime.today() 
 
+
+
 clicked = st.button("キャッシュクリア")
 if clicked:
     st.legacy_caching.clear_cache()
@@ -25,6 +27,8 @@ choice = st.sidebar.radio("""
 """
 ,["楽天キーワード検索", "楽天キーワード閲覧", "楽天急上昇ワード", "価格ドットコムキーワード", "価格ドットコム急上昇"]
 )
+
+st.sidebar.write(f'<span style="font-size: 1.0em;letter-spacing:2px">[お問い合わせ](https://docs.google.com/forms/d/e/1FAIpQLSdgRvJNzOgBHSdem3CbElkrDAbDAe4--NEnxJyIasXGbBHwsg/viewform)</span>', unsafe_allow_html=True)
 
 
 @st.cache
@@ -52,6 +56,7 @@ def get_data():
     return df, df3, df4
 
 df, df3, df4 = get_data()
+
 
 
 if choice == "楽天キーワード閲覧":
@@ -191,7 +196,6 @@ elif choice == "楽天キーワード検索":
                 data3 = pd.concat([data1,data2], axis=1)
                 data3["key"] = str(choice)
             
-
 
                 if choice2:
                     ranklist2 = []
