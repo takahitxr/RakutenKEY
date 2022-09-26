@@ -293,6 +293,7 @@ elif choice == "楽天キーワード検索":
                                         data4 = pd.concat([data1,data2], axis=1)
                                         data4["key"] = str(choice4)
                                         data3 = pd.concat([data3,data4])
+                                        
 
                                         if choice5:
                                             ranklist2 = []
@@ -327,11 +328,10 @@ elif choice == "楽天キーワード検索":
                                                 data3 = pd.concat([data3,data4])
 
 
-
-
         chart = alt.Chart(data3).mark_line().encode(
             x="日付:T",
-            y="ランキング:Q",
+#            y="ランキング:Q",
+            y=alt.Y("ランキング:Q", sort="descending"),
             color="key:N",
             opacity=alt.condition(selection, alt.value(1), alt.value(0.1))
             ).add_selection(
