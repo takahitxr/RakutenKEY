@@ -31,9 +31,10 @@ def login_user(username,password):
 
 def main():
 	if "res" not in st.session_state:
-		st.session_state.user = st.sidebar.text_input("ユーザー名を入力してください")
-		st.session_state.password = st.sidebar.text_input("パスワードを入力してください",type='password')
-		button = st.sidebar.button("ログイン")
+		st.title("キーワード解析アプリ")
+		st.session_state.user = st.text_input("ユーザー名を入力してください")
+		st.session_state.password = st.text_input("パスワードを入力してください",type='password')
+		button = st.button("ログイン")
 		if button:
 			hashed_pswd = make_hashes(st.session_state.password)
 			create_user()
