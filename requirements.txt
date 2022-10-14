@@ -7,3 +7,4 @@ oauth2client
 soupsieve
 bs4
 hashlib
+sqlite3
